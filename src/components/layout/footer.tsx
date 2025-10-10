@@ -43,6 +43,7 @@ const languages = [
 
 export default function AppFooter() {
   const { theme, toggleTheme } = useTheme();
+  const [selectedLanguage, setSelectedLanguage] = useState('English');
 
   return (
     <footer className="border-t bg-card">
@@ -61,15 +62,15 @@ export default function AppFooter() {
         <div className="flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="icon">
-                <Globe className="h-[1.2rem] w-[1.2rem]" />
-                <span className="sr-only">Change language</span>
+              <Button variant="outline">
+                <Globe className="h-[1.2rem] w-[1.2rem] mr-2" />
+                {selectedLanguage}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <ScrollArea className="h-72 w-48 rounded-md">
-                {languages.map((lang, index) => (
-                    <DropdownMenuItem key={index}>
+                {languages.map((lang) => (
+                    <DropdownMenuItem key={lang} onSelect={() => setSelectedLanguage(lang)}>
                         {lang}
                     </DropdownMenuItem>
                 ))}
