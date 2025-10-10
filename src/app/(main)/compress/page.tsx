@@ -46,18 +46,15 @@ export default function CompressPage() {
   const [originalSize, setOriginalSize] = useState<number | null>(null);
   const [compressedSize, setCompressedSize] = useState<number | null>(null);
   const [isCompressing, setIsCompressing] = useState(false);
-  const [compressedFile, setCompressedFile] = useState<File | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
     if (file) {
       setOriginalSize(file.size);
-      setCompressedFile(null);
       setCompressedSize(null);
     } else {
       setOriginalSize(null);
       setCompressedSize(null);
-      setCompressedFile(null);
     }
   }, [file]);
   
@@ -78,7 +75,7 @@ export default function CompressPage() {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }
 
-  const handleCompress = async () => {
+  const handleCompressAndDownload = async () => {
     if (!file) {
       toast({
         variant: 'destructive',
@@ -89,7 +86,6 @@ export default function CompressPage() {
     }
     
     setIsCompressing(true);
-    setCompressedFile(null);
     setCompressedSize(null);
 
     try {
@@ -101,12 +97,19 @@ export default function CompressPage() {
 
       const newFileName = `${file.name.replace(/\.[^/.]+$/, "")}_compressed.jpg`;
       const compressed = dataURIToFile(result.compressedImageDataUri, newFileName);
-      setCompressedFile(compressed);
       setCompressedSize(compressed.size);
 
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(compressed);
+      link.download = compressed.name;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(link.href);
+
       toast({
-        title: 'Compression Complete',
-        description: 'AI-powered compression finished.',
+        title: 'Compression & Download Complete',
+        description: 'AI-powered compression finished and download has started.',
       });
 
     } catch (error) {
@@ -116,25 +119,7 @@ export default function CompressPage() {
         setIsCompressing(false);
     }
   };
-
-  const handleDownload = () => {
-      if (!compressedFile) {
-          toast({ variant: 'destructive', title: 'Error', description: 'No compressed image to download.' });
-          return;
-      }
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(compressedFile);
-      link.download = compressedFile.name;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(link.href);
-      toast({
-          title: 'Success',
-          description: 'Download started for the compressed image.',
-      });
-  }
-
+  
   const reduction = originalSize && compressedSize ? Math.round(((originalSize - compressedSize) / originalSize) * 100) : 0;
 
   return (
@@ -177,13 +162,9 @@ export default function CompressPage() {
       </div>
 
       <div className="flex flex-wrap gap-4">
-        <Button onClick={handleCompress} disabled={!file || isCompressing} className="w-full sm:w-auto">
-            <Wand2 className="mr-2 h-4 w-4" />
-            {isCompressing ? 'AI Compressing...' : 'Run AI Compression'}
-        </Button>
-        <Button onClick={handleDownload} disabled={!compressedFile || isCompressing} className="w-full sm:w-auto" variant="secondary">
-            <Download className="mr-2 h-4 w-4" />
-            Download Compressed Image
+        <Button onClick={handleCompressAndDownload} disabled={!file || isCompressing} className="w-full sm:w-auto">
+            {isCompressing ? <Wand2 className="mr-2 h-4 w-4 animate-pulse" /> : <Download className="mr-2 h-4 w-4" />}
+            {isCompressing ? 'Compressing...' : 'Compress & Download'}
         </Button>
       </div>
     </Workspace>
