@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { FORMATS } from '@/lib/constants';
+import jsPDF from 'jspdf';
 
 export default function ConvertPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -42,6 +43,33 @@ export default function ConvertPage() {
       if (!ctx) return;
       
       ctx.drawImage(img, 0, 0);
+
+      const newFileName = `${file.name.replace(/\.[^/.]+$/, "")}.${targetFormat.toLowerCase()}`;
+      
+      if (targetFormat === 'PDF') {
+        try {
+          const orientation = img.width > img.height ? 'l' : 'p';
+          const pdf = new jsPDF({
+            orientation,
+            unit: 'px',
+            format: [img.width, img.height]
+          });
+          const imgData = canvas.toDataURL(file.type);
+          pdf.addImage(imgData, file.type.replace('image/','').toUpperCase(), 0, 0, img.width, img.height);
+          pdf.save(newFileName);
+          toast({
+            title: 'Success',
+            description: `Image converted to ${targetFormat} and download started.`,
+          });
+        } catch (error) {
+           toast({
+                variant: 'destructive',
+                title: 'Conversion Failed',
+                description: `Could not convert image to ${targetFormat}.`,
+            });
+        }
+        return;
+      }
       
       const mimeType = `image/${targetFormat.toLowerCase()}`;
       canvas.toBlob((blob) => {
@@ -55,7 +83,6 @@ export default function ConvertPage() {
         }
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        const newFileName = `${file.name.replace(/\.[^/.]+$/, "")}.${targetFormat.toLowerCase()}`;
         link.download = newFileName;
         document.body.appendChild(link);
         link.click();

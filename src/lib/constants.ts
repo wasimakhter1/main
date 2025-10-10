@@ -1,4 +1,4 @@
-import { Scale, Replace, Minimize, Layers, Printer, Sparkles, Home, type LucideIcon } from 'lucide-react';
+import { Scale, Replace, Minimize, Layers, Printer, Sparkles, Home, Combine, type LucideIcon } from 'lucide-react';
 
 export type Preset = {
   name: string;
@@ -21,7 +21,7 @@ export const PRESETS: Preset[] = [
   { name: '3:2 Ratio', width: 1080, height: 720, category: 'Standard Ratios' },
 ];
 
-export const FORMATS = ['JPEG', 'PNG', 'WebP', 'GIF'];
+export const FORMATS = ['JPEG', 'PNG', 'WebP', 'GIF', 'PDF'];
 
 export type NavLink = {
     href: string;
@@ -35,6 +35,7 @@ export const mainNavLinks: NavLink[] = [
   { href: '/resize', label: 'Resize', title: 'Image Resizer', icon: Scale },
   { href: '/convert', label: 'Convert', title: 'Format Converter', icon: Replace },
   { href: '/compress', label: 'Compress', title: 'Image Compressor', icon: Minimize },
+  { href: '/merge', label: 'Merge', title: 'Image Merger', icon: Combine },
   { href: '/bulk', label: 'Bulk', title: 'Bulk Operations', icon: Layers },
   { href: '/dpi', label: 'DPI Control', title: 'DPI Controller', icon: Printer },
   { href: '/enhance', label: 'AI Enhance', title: 'AI Image Enhancer', icon: Sparkles },
