@@ -6,7 +6,7 @@ import { mainNavLinks } from '@/lib/constants';
 
 function getPageTitle(pathname: string): string {
   const link = mainNavLinks.find((item) => pathname.startsWith(item.href));
-  return link?.title || 'ImageForge';
+  return link?.title || 'ImageResizeKit';
 }
 
 export default function AppHeader() {

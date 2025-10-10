@@ -13,7 +13,7 @@ export default function HomePage() {
         <div className="container px-4 md:px-6">
           <div className="grid max-w-4xl mx-auto gap-4">
             <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl">
-              Welcome to <span className="text-primary">ImageForge</span>
+              Welcome to <span className="text-primary">ImageResizeKit</span>
             </h1>
             <p className="mt-4 text-lg text-muted-foreground md:text-xl">
               Your all-in-one solution for image manipulation. Resize, convert, compress, and enhance your images with powerful tools and AI assistance. Get started by choosing a tool below.

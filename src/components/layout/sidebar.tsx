@@ -24,7 +24,7 @@ export default function AppSidebar() {
       <SidebarHeader className="p-2">
         <div className="flex items-center gap-2">
           <AppLogo />
-          <span className="text-xl font-semibold">ImageForge</span>
+          <span className="text-xl font-semibold">ImageResizeKit</span>
         </div>
       </SidebarHeader>
       <SidebarContent>

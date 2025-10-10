@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Download, UploadCloud, X, Combine } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 type FileWithPreview = {
@@ -82,7 +81,7 @@ export default function MergePage() {
         if (!blob) throw new Error('Failed to create blob');
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = 'ImageForge_Merged.png';
+        link.download = 'ImageResizeKit_Merged.png';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

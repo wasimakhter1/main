@@ -47,11 +47,18 @@ export default function EnhancePage() {
     setFormKey(Date.now());
   };
 
+  const handleFormAction = (formData: FormData) => {
+    if (file) {
+      formData.set('image', file);
+    }
+    formAction(formData);
+  }
+
   const downloadImage = () => {
     if (state?.relatedImage) {
         const link = document.createElement('a');
         link.href = state.relatedImage;
-        link.download = 'ImageForge_Enhanced.png';
+        link.download = 'ImageResizeKit_Enhanced.png';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -63,9 +70,8 @@ export default function EnhancePage() {
       title="AI Image Enhancer"
       description="Upload an image and let our generative AI suggest a visually related image to enhance your creative projects."
     >
-      <form key={formKey} action={formAction} className="space-y-8">
+      <form key={formKey} action={handleFormAction} className="space-y-8">
         <ImageUpload file={file} onImageUpload={handleImageUpload} onRemoveImage={handleRemoveImage} />
-        {file && <input type="file" name="image" className="hidden" defaultChecked={!!file} />}
         
         <div>
           <Label htmlFor="prompt">Prompt (optional)</Label>

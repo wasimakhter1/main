@@ -31,7 +31,7 @@ export type NavLink = {
 };
 
 export const mainNavLinks: NavLink[] = [
-  { href: '/home', label: 'Home', title: 'ImageForge Home', icon: Home },
+  { href: '/home', label: 'Home', title: 'ImageResizeKit Home', icon: Home },
   { href: '/resize', label: 'Resize', title: 'Image Resizer', icon: Scale },
   { href: '/convert', label: 'Convert', title: 'Format Converter', icon: Replace },
   { href: '/compress', label: 'Compress', title: 'Image Compressor', icon: Minimize },

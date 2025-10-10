@@ -9,24 +9,24 @@ import {
 
 const faqs = [
   {
-    question: 'What is ImageForge?',
-    answer: 'ImageForge is a powerful online tool that allows you to resize, convert, compress, and enhance your images with ease. We also offer AI-powered features to help you get the most out of your images.',
+    question: 'What is ImageResizeKit and how can it help me?',
+    answer: 'ImageResizeKit is a comprehensive, free online tool designed for all your image editing needs. You can easily resize images for social media, convert formats like JPG to PNG, compress large image files to save space, and even use AI to enhance your photos. It\'s a one-stop-shop for image manipulation.',
   },
   {
-    question: 'Is ImageForge free to use?',
-    answer: 'Yes, the basic features of ImageForge are completely free to use. We may introduce premium features in the future.',
+    question: 'Is this online image editor completely free?',
+    answer: 'Yes, all the core features of ImageResizeKit—including our image resizer, format converter, and file compressor—are completely free to use. We aim to provide powerful image tools accessible to everyone, with potential premium features for professional users in the future.',
   },
   {
-    question: 'What file formats do you support?',
-    answer: 'We support a wide range of formats, including JPEG, PNG, WebP, and GIF for conversion and processing.',
+    question: 'Which image file formats can I work with?',
+    answer: 'Our tool supports a wide variety of the most popular image formats. You can upload and convert between JPEG, PNG, WebP, GIF, and even convert images to PDF. This flexibility makes it a powerful free online image converter.',
   },
   {
-    question: 'How does the AI Image Enhancer work?',
-    answer: 'Our AI Image Enhancer uses advanced generative models to create visually related images based on your source image. You can guide the generation with optional text prompts.',
+    question: 'How does the AI Image Enhancer improve my photos?',
+    answer: 'The AI Image Enhancer uses advanced generative AI to analyze your source image and create a new, visually related version. You can guide this process with simple text prompts, allowing you to fine-tune colors, add creative styles, or improve overall composition, making professional-level photo enhancement accessible to all.',
   },
   {
-    question: 'Is my data safe?',
-    answer: 'We take your privacy seriously. Images are processed on our servers and are not stored long-term. Please see our Privacy Policy for more details.',
+    question: 'Are the images I upload to ImageResizeKit secure?',
+    answer: 'We prioritize your privacy and security. Your images are processed securely on our servers for the sole purpose of applying the edits you request. We do not store your files long-term. For more detailed information, please review our Privacy Policy.',
   },
 ];
 

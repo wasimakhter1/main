@@ -85,7 +85,7 @@ export default function BulkPage() {
         const zipBlob = await zip.generateAsync({ type: 'blob' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(zipBlob);
-        link.download = 'ImageForge_Bulk.zip';
+        link.download = 'ImageResizeKit_Bulk.zip';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

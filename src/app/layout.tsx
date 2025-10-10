@@ -4,7 +4,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { SidebarProvider } from "@/components/ui/sidebar"
 
 export const metadata: Metadata = {
-  title: 'ImageForge',
+  title: 'ImageResizeKit',
   description: 'Resize, convert, compress, and enhance your images with AI.',
 };
 
