@@ -13,6 +13,10 @@ const faqs = [
     answer: 'ImageResizeKit is a comprehensive, free online tool designed for all your image editing needs. You can easily resize images for social media, convert formats like JPG to PNG, compress large image files to save space, and even use AI to enhance your photos. It\'s a one-stop-shop for image manipulation.',
   },
   {
+    question: 'How to Resize Images?',
+    answer: '1. **Upload Your Image:** Click the "Click to upload" button or drag and drop your image file into the designated area. 2. **Set Dimensions:** Either choose a preset from the dropdown menu for common sizes or manually enter your desired width and height in pixels. You can lock the aspect ratio to prevent distortion. 3. **Resize & Download:** Click the "Resize & Download" button. Your resized image will be processed and the download will start automatically.',
+  },
+  {
     question: 'Is this online image editor completely free?',
     answer: 'Yes, all the core features of ImageResizeKit—including our image resizer, format converter, and file compressor—are completely free to use. We aim to provide powerful image tools accessible to everyone, with potential premium features for professional users in the future.',
   },
