@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import AppSidebar from '@/components/layout/sidebar';
 import AppHeader from '@/components/layout/header';
+import AppFooter from '@/components/layout/footer';
 import { SidebarInset } from '@/components/ui/sidebar';
 
 export default function MainLayout({ children }: { children: ReactNode }) {
@@ -15,6 +16,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
               {children}
             </div>
           </main>
+          <AppFooter />
         </div>
       </SidebarInset>
     </>
