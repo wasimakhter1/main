@@ -22,10 +22,10 @@ export default function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader className="p-2">
-        <div className="flex items-center gap-2">
+        <Link href="/home" className="flex items-center gap-2">
           <AppLogo />
           <span className="text-xl font-semibold">ImageResizeKit</span>
-        </div>
+        </Link>
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
