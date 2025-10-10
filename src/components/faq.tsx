@@ -25,10 +25,6 @@ const faqs = [
     answer: 'Our tool supports a wide variety of the most popular image formats. You can upload and convert between JPEG, PNG, WebP, GIF, and even convert images to PDF. This flexibility makes it a powerful free online image converter.',
   },
   {
-    question: 'How does the AI Image Enhancer improve my photos?',
-    answer: 'The AI Image Enhancer uses advanced generative AI to analyze your source image and create a new, visually related version. You can guide this process with simple text prompts, allowing you to fine-tune colors, add creative styles, or improve overall composition, making professional-level photo enhancement accessible to all.',
-  },
-  {
     question: 'Are the images I upload to ImageResizeKit secure?',
     answer: 'We prioritize your privacy and security. Your images are processed securely on our servers for the sole purpose of applying the edits you request. We do not store your files long-term. For more detailed information, please review our Privacy Policy.',
   },
