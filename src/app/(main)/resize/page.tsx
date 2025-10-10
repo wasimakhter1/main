@@ -19,6 +19,7 @@ export default function ResizePage() {
   const [height, setHeight] = useState<number | string>('');
   const [aspectRatioLocked, setAspectRatioLocked] = useState(true);
   const { toast } = useToast();
+  const [selectedPreset, setSelectedPreset] = useState<string>('');
 
   useEffect(() => {
     if (file) {
@@ -33,6 +34,7 @@ export default function ResizePage() {
       setOriginalDimensions(null);
       setWidth('');
       setHeight('');
+      setSelectedPreset('');
     }
   }, [file]);
 
@@ -47,9 +49,19 @@ export default function ResizePage() {
   const handlePresetSelect = (preset: Preset) => {
     setWidth(preset.width);
     setHeight(preset.height);
+    setSelectedPreset(preset.name);
+  };
+
+  const handleClearPreset = () => {
+    setSelectedPreset('');
+    if (originalDimensions) {
+      setWidth(originalDimensions.width);
+      setHeight(originalDimensions.height);
+    }
   };
 
   const handleDimensionChange = (value: string, dimension: 'width' | 'height') => {
+    setSelectedPreset('');
     const numValue = parseInt(value, 10);
     if (dimension === 'width') {
       setWidth(value);
@@ -118,7 +130,12 @@ export default function ResizePage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
         <div>
           <Label htmlFor="presets">Presets</Label>
-          <PresetSelector onSelect={handlePresetSelect} disabled={!file} />
+          <PresetSelector 
+            onSelect={handlePresetSelect} 
+            onClear={handleClearPreset}
+            disabled={!file}
+            value={selectedPreset}
+          />
         </div>
         
         <div className="flex items-center space-x-2">
