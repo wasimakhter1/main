@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Workspace from '@/components/workspace';
 import { Button } from '@/components/ui/button';
-import { Download, UploadCloud, X, Combine } from 'lucide-react';
+import { Download, UploadCloud, X, Combine, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
