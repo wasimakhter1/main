@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import Workspace from '@/components/workspace';
 import ImageUpload from '@/components/image-upload';
 import { Button } from '@/components/ui/button';
@@ -36,7 +37,7 @@ function SubmitButton() {
 export default function DpiPage() {
   const [file, setFile] = useState<File | null>(null);
   const [formKey, setFormKey] = useState(Date.now());
-  const [state, formAction] = useFormState(getDpiSuggestion, initialState);
+  const [state, formAction] = useActionState(getDpiSuggestion, initialState);
   const { toast } = useToast();
 
   const handleImageUpload = (uploadedFile: File) => {
@@ -55,7 +56,7 @@ export default function DpiPage() {
     >
       <form key={formKey} action={formAction} className="space-y-8">
         <ImageUpload file={file} onImageUpload={handleImageUpload} onRemoveImage={handleRemoveImage} />
-        {file && <input type="file" name="image" defaultValue={undefined} value={undefined} className="hidden" defaultChecked={!!file} />}
+        {file && <input type="file" name="image" value={undefined} className="hidden" defaultChecked={!!file} />}
         
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
