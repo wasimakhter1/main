@@ -50,6 +50,25 @@ export default function HomePage() {
       </section>
 
       <Faq />
+
+      <section className="py-12 md:py-16">
+        <div className="space-y-6 text-center">
+          <h2 className="text-3xl font-bold tracking-tight">How to Resize Images?</h2>
+          <div className="max-w-xl mx-auto text-left">
+            <ol className="list-decimal list-inside space-y-4 text-lg text-muted-foreground">
+              <li>
+                <span className="font-semibold text-foreground">Upload Your Image:</span> Click the "Click to upload" button or drag and drop your image into the upload area.
+              </li>
+              <li>
+                <span className="font-semibold text-foreground">Set Dimensions:</span> Enter your desired width and height, or select a preset.
+              </li>
+              <li>
+                <span className="font-semibold text-foreground">Export Your Image:</span> Click the "Resize & Download" button to get your new image.
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
