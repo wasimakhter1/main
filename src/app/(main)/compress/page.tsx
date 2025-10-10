@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import Workspace from '@/components/workspace';
 import ImageUpload from '@/components/image-upload';
 import { Button } from '@/components/ui/button';
@@ -96,16 +96,15 @@ export default function CompressPage() {
       });
 
       const newFileName = `${file.name.replace(/\.[^/.]+$/, "")}_compressed.jpg`;
-      const compressed = dataURIToFile(result.compressedImageDataUri, newFileName);
-      setCompressedSize(compressed.size);
+      const compressedFile = dataURIToFile(result.compressedImageDataUri, newFileName);
+      setCompressedSize(compressedFile.size);
 
       const link = document.createElement('a');
-      link.href = URL.createObjectURL(compressed);
-      link.download = compressed.name;
+      link.href = result.compressedImageDataUri;
+      link.download = newFileName;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      URL.revokeObjectURL(link.href);
 
       toast({
         title: 'Compression & Download Complete',
@@ -154,9 +153,9 @@ export default function CompressPage() {
                 <span className='text-muted-foreground'>Compressed Size:</span>
                 <span className='font-medium'>{isCompressing ? '...' : formatFileSize(compressedSize)}</span>
             </div>
-            <div className='flex justify-between'>
-                <span className='font-medium text-accent'>Reduction:</span>
-                <span className='font-medium text-accent'>{isCompressing ? '...' : `${reduction}%`}</span>
+            <div className='flex justify-between text-green-600'>
+                <span className='font-medium'>Reduction:</span>
+                <span className='font-medium'>{isCompressing ? '...' : `${reduction}%`}</span>
             </div>
         </div>
       </div>
