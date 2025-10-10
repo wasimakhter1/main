@@ -1,4 +1,4 @@
-import { Scale, Replace, Minimize, Layers, Sparkles, Home, Combine, type LucideIcon } from 'lucide-react';
+import { Scale, Replace, Minimize, Layers, Sparkles, Home, Combine, Crop, type LucideIcon } from 'lucide-react';
 
 export type Preset = {
   name: string;
@@ -33,6 +33,7 @@ export type NavLink = {
 export const mainNavLinks: NavLink[] = [
   { href: '/home', label: 'Home', title: 'ImageResizeKit Home', icon: Home },
   { href: '/resize', label: 'Resize', title: 'Image Resizer', icon: Scale },
+  { href: '/crop', label: 'Crop', title: 'Image Cropper', icon: Crop },
   { href: '/convert', label: 'Convert', title: 'Format Converter', icon: Replace },
   { href: '/compress', label: 'Compress', title: 'Image Compressor', icon: Minimize },
   { href: '/merge', label: 'Merge', title: 'Image Merger', icon: Combine },
