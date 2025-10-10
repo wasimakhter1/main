@@ -9,9 +9,11 @@ interface ImageUploadProps {
   onImageUpload: (file: File) => void;
   onRemoveImage: () => void;
   file: File | null;
+  accept?: string;
+  description?: string;
 }
 
-export default function ImageUpload({ onImageUpload, onRemoveImage, file }: ImageUploadProps) {
+export default function ImageUpload({ onImageUpload, onRemoveImage, file, accept = "image/png,image/jpeg,image/gif,image/webp,application/pdf", description = "PNG, JPG, GIF, WebP or PDF" }: ImageUploadProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
   const [isPdf, setIsPdf] = useState(false);
@@ -116,9 +118,9 @@ export default function ImageUpload({ onImageUpload, onRemoveImage, file }: Imag
         <p className="mb-2 text-sm text-muted-foreground">
           <span className="font-semibold text-primary">Click to upload</span> or drag and drop
         </p>
-        <p className="text-xs text-muted-foreground">PNG, JPG, GIF, WebP or PDF</p>
+        <p className="text-xs text-muted-foreground">{description}</p>
       </div>
-      <input id="dropzone-file" type="file" className="hidden" onChange={handleFileChange} accept="image/png,image/jpeg,image/gif,image/webp,application/pdf" />
+      <input id="dropzone-file" type="file" className="hidden" onChange={handleFileChange} accept={accept} />
     </label>
   );
 }

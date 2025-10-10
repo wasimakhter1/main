@@ -113,7 +113,7 @@ export default function ResizePage() {
       title="Image Resizer"
       description="Resize your images to specific dimensions with ease. Lock aspect ratio to prevent distortion."
     >
-      <ImageUpload file={file} onImageUpload={handleImageUpload} onRemoveImage={handleRemoveImage} />
+      <ImageUpload file={file} onImageUpload={handleImageUpload} onRemoveImage={handleRemoveImage} accept="image/png,image/jpeg,image/gif,image/webp" />
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
         <div>

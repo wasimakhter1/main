@@ -51,7 +51,16 @@ export default function AppFooter() {
 
   useEffect(() => {
     setIsClient(true);
+    const storedLanguage = localStorage.getItem('language') || 'English';
+    setSelectedLanguage(storedLanguage);
   }, []);
+
+  const handleLanguageChange = (lang: string) => {
+    setSelectedLanguage(lang);
+    if(typeof window !== 'undefined') {
+      localStorage.setItem('language', lang);
+    }
+  }
 
 
   return (
@@ -80,7 +89,7 @@ export default function AppFooter() {
               <DropdownMenuContent align="end">
                 <ScrollArea className="h-72 w-48 rounded-md">
                   {languages.map((lang) => (
-                      <DropdownMenuItem key={lang} onSelect={() => setSelectedLanguage(lang)}>
+                      <DropdownMenuItem key={lang} onSelect={() => handleLanguageChange(lang)}>
                           {lang}
                       </DropdownMenuItem>
                   ))}
