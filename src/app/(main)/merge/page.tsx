@@ -7,6 +7,11 @@ import { Download, UploadCloud, X, Combine } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import * as pdfjsLib from 'pdfjs-dist';
+
+if (typeof window !== 'undefined') {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
+}
 
 type FileWithPreview = {
   file: File;
@@ -31,29 +36,58 @@ export default function MergePage() {
 
   const removeFile = (fileName: string) => {
     setFiles(prev => {
-      const newFiles = prev.filter(f => f.file.name !== fileName);
-      newFiles.forEach(f => URL.revokeObjectURL(f.preview));
-      return newFiles;
+      const fileToRemove = prev.find(f => f.file.name === fileName);
+      if (fileToRemove) {
+        URL.revokeObjectURL(fileToRemove.preview);
+      }
+      return prev.filter(f => f.file.name !== fileName);
+    });
+  };
+
+  const getPdfAsImage = async (file: File): Promise<HTMLImageElement> => {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+    const page = await pdf.getPage(1);
+    const viewport = page.getViewport({ scale: 1.5 });
+
+    const canvas = document.createElement('canvas');
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) throw new Error('Canvas context not available for PDF');
+
+    await page.render({ canvasContext: ctx, viewport }).promise;
+
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = canvas.toDataURL();
+    });
+  };
+
+  const getImage = (file: File): Promise<HTMLImageElement> => {
+    if (file.type === 'application/pdf') {
+      return getPdfAsImage(file);
+    }
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = URL.createObjectURL(file);
     });
   };
 
   const handleMerge = async () => {
     if (files.length < 2) {
-      toast({ variant: 'destructive', title: 'Not enough images', description: 'Please upload at least two images to merge.' });
+      toast({ variant: 'destructive', title: 'Not enough files', description: 'Please upload at least two files to merge.' });
       return;
     }
     
     setIsProcessing(true);
     
     try {
-      const images = await Promise.all(files.map(({ file }) => {
-        return new Promise<HTMLImageElement>((resolve, reject) => {
-          const img = new Image();
-          img.onload = () => resolve(img);
-          img.onerror = reject;
-          img.src = URL.createObjectURL(file);
-        });
-      }));
+      const images = await Promise.all(files.map(({ file }) => getImage(file)));
 
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
@@ -86,7 +120,7 @@ export default function MergePage() {
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(link.href);
-        toast({ title: 'Success', description: 'Images merged and downloaded.' });
+        toast({ title: 'Success', description: 'Files merged and downloaded.' });
       }, 'image/png');
 
     } catch (error) {
@@ -100,7 +134,7 @@ export default function MergePage() {
   return (
     <Workspace
       title="Image Merger"
-      description="Combine multiple images into a single file, either horizontally or vertically."
+      description="Combine multiple images or PDFs (first page) into a single file, either horizontally or vertically."
     >
       <div className="space-y-4">
         <label htmlFor="merge-upload" className="flex flex-col items-center justify-center w-full min-h-48 border-2 border-dashed rounded-lg cursor-pointer bg-card hover:bg-secondary transition-colors">
@@ -109,9 +143,9 @@ export default function MergePage() {
             <p className="mb-2 text-sm text-muted-foreground">
               <span className="font-semibold text-primary">Click to upload</span> or drag and drop
             </p>
-            <p className="text-xs text-muted-foreground">Upload at least two images to merge</p>
+            <p className="text-xs text-muted-foreground">Upload at least two images or PDFs to merge</p>
           </div>
-          <input id="merge-upload" type="file" multiple className="hidden" onChange={handleFileChange} accept="image/*" />
+          <input id="merge-upload" type="file" multiple className="hidden" onChange={handleFileChange} accept="image/*,application/pdf" />
         </label>
         
         {files.length > 0 && (
@@ -120,7 +154,13 @@ export default function MergePage() {
             <div className="max-h-60 overflow-y-auto rounded-md border p-2 space-y-2">
               {files.map(({ file, preview }) => (
                 <div key={file.name} className="flex items-center gap-3 p-2 bg-secondary/50 rounded-md">
-                  <img src={preview} alt={file.name} className="h-10 w-10 object-cover rounded" />
+                   {file.type === 'application/pdf' ? (
+                    <div className="h-10 w-10 flex items-center justify-center bg-muted rounded">
+                      <FileText className="h-6 w-6 text-muted-foreground" />
+                    </div>
+                  ) : (
+                    <img src={preview} alt={file.name} className="h-10 w-10 object-cover rounded" />
+                  )}
                   <p className="flex-1 text-sm truncate">{file.name}</p>
                   <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => removeFile(file.name)}>
                     <X className="h-4 w-4" />
@@ -157,7 +197,7 @@ export default function MergePage() {
         ) : (
           <Combine className="mr-2 h-4 w-4" />
         )}
-        {isProcessing ? 'Merging...' : `Merge ${files.length} Images`}
+        {isProcessing ? 'Merging...' : `Merge ${files.length} Files`}
       </Button>
     </Workspace>
   );

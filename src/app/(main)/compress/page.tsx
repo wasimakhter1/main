@@ -9,6 +9,11 @@ import { useToast } from '@/hooks/use-toast';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import * as pdfjsLib from 'pdfjs-dist';
+
+if (typeof window !== 'undefined') {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
+}
 
 export default function CompressPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -44,33 +49,48 @@ export default function CompressPage() {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }
 
-  const handleCompress = (download = false) => {
-    if (!file) {
-      if (download) {
-        toast({
-          variant: 'destructive',
-          title: 'Error',
-          description: 'Please upload an image to compress.',
-        });
-      }
-      return;
+  const compressPdf = async (download: boolean) => {
+    if (!file) return;
+
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+      const page = await pdf.getPage(1);
+      const viewport = page.getViewport({ scale: 1.5 });
+      
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      await page.render({ canvasContext: ctx, viewport }).promise;
+
+      compressCanvas(canvas, download);
+
+    } catch (error) {
+      console.error(error);
+      toast({ variant: 'destructive', title: 'PDF Processing Error', description: 'Failed to process the PDF file.' });
     }
-    
-    setIsCompressing(true);
-    
+  };
+
+  const compressImage = (download: boolean) => {
+    if (!file) return;
     const img = new Image();
     img.onload = () => {
       const canvas = document.createElement('canvas');
       canvas.width = img.width;
       canvas.height = img.height;
       const ctx = canvas.getContext('2d');
-      if (!ctx) {
-        setIsCompressing(false);
-        return;
-      }
+      if (!ctx) return;
       
       ctx.drawImage(img, 0, 0);
-      
+      compressCanvas(canvas, download);
+    };
+    img.src = URL.createObjectURL(file);
+  }
+
+  const compressCanvas = (canvas: HTMLCanvasElement, download: boolean) => {
       const mimeType = 'image/jpeg';
       canvas.toBlob((blob) => {
         setIsCompressing(false);
@@ -80,7 +100,7 @@ export default function CompressPage() {
         if(download) {
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            const newFileName = `${file.name.replace(/\.[^/.]+$/, "")}_compressed.jpg`;
+            const newFileName = `${file!.name.replace(/\.[^/.]+$/, "")}_compressed.jpg`;
             link.download = newFileName;
             document.body.appendChild(link);
             link.click();
@@ -92,8 +112,27 @@ export default function CompressPage() {
             });
         }
       }, mimeType, quality / 100);
-    };
-    img.src = URL.createObjectURL(file);
+  }
+
+  const handleCompress = (download = false) => {
+    if (!file) {
+      if (download) {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Please upload a file to compress.',
+        });
+      }
+      return;
+    }
+    
+    setIsCompressing(true);
+
+    if (file.type === 'application/pdf') {
+      compressPdf(download);
+    } else {
+      compressImage(download);
+    }
   };
 
   useEffect(() => {
