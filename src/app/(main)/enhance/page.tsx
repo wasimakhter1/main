@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useState, useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import Workspace from '@/components/workspace';
 import ImageUpload from '@/components/image-upload';
 import { Button } from '@/components/ui/button';
@@ -36,7 +36,7 @@ function SubmitButton() {
 export default function EnhancePage() {
   const [file, setFile] = useState<File | null>(null);
   const [formKey, setFormKey] = useState(Date.now());
-  const [state, formAction] = useFormState(getRelatedImage, initialState);
+  const [state, formAction] = useActionState(getRelatedImage, initialState);
 
   const handleImageUpload = (uploadedFile: File) => {
     setFile(uploadedFile);
