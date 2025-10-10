@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { useActionState } from 'react';
+import { useState, useActionState, useEffect } from 'react';
 import { useFormStatus } from 'react-dom';
 import Workspace from '@/components/workspace';
 import ImageUpload from '@/components/image-upload';
@@ -49,14 +48,20 @@ export default function DpiPage() {
     setFormKey(Date.now()); // Reset form state
   };
 
+  const handleFormAction = (formData: FormData) => {
+    if (file) {
+      formData.set('image', file);
+    }
+    formAction(formData);
+  }
+
   return (
     <Workspace
       title="DPI Controller"
       description="Let our AI analyze your image and suggest the optimal DPI for high-quality printing based on your desired print size."
     >
-      <form key={formKey} action={formAction} className="space-y-8">
+      <form key={formKey} action={handleFormAction} className="space-y-8">
         <ImageUpload file={file} onImageUpload={handleImageUpload} onRemoveImage={handleRemoveImage} />
-        {file && <input type="file" name="image" value={undefined} className="hidden" defaultChecked={!!file} />}
         
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
