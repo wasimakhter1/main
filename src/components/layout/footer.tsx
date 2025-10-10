@@ -69,7 +69,7 @@ export default function AppFooter() {
             <DropdownMenuContent align="end">
               <ScrollArea className="h-72 w-48 rounded-md">
                 {languages.map((lang, index) => (
-                    <DropdownMenuItem key={index} disabled={lang !== "English"}>
+                    <DropdownMenuItem key={index}>
                         {lang}
                     </DropdownMenuItem>
                 ))}
