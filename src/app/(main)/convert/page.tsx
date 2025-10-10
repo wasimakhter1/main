@@ -24,6 +24,9 @@ export default function ConvertPage() {
 
   const handleImageUpload = (uploadedFile: File) => {
     setFile(uploadedFile);
+    if (uploadedFile.type === 'application/pdf' && (targetFormat === 'PDF')) {
+      setTargetFormat('PNG');
+    }
   };
 
   const handleRemoveImage = () => {
@@ -49,7 +52,7 @@ export default function ConvertPage() {
             unit: 'px',
             format: [img.width, img.height]
           });
-          const imgData = canvas.toDataURL(file!.type);
+          const imgData = canvas.toDataURL(file!.type.startsWith('image/') ? file!.type : 'image/png');
           pdf.addImage(imgData, file!.type.replace('image/','').toUpperCase(), 0, 0, img.width, img.height);
           pdf.save(newFileName);
           toast({
@@ -97,13 +100,16 @@ export default function ConvertPage() {
       const arrayBuffer = await file.arrayBuffer();
       const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
       const page = await pdf.getPage(1); // Using the first page
-      const viewport = page.getViewport({ scale: 1.5 });
+      const viewport = page.getViewport({ scale: 2.0 }); // Increased scale for better quality
       
       const canvas = document.createElement('canvas');
       canvas.width = viewport.width;
       canvas.height = viewport.height;
       const ctx = canvas.getContext('2d');
-      if (!ctx) return;
+      if (!ctx) {
+        toast({ variant: "destructive", title: "Canvas Error", description: "Could not get canvas context." });
+        return;
+      }
 
       await page.render({ canvasContext: ctx, viewport: viewport }).promise;
 
@@ -123,7 +129,7 @@ export default function ConvertPage() {
         document.body.removeChild(link);
         URL.revokeObjectURL(link.href);
         toast({ title: 'Success', description: `PDF converted to ${targetFormat} and download started.` });
-      }, mimeType);
+      }, mimeType, 0.95); // For JPEG, quality can be set
     } catch (error) {
       console.error(error);
       toast({ variant: 'destructive', title: 'PDF Conversion Error', description: 'Failed to process the PDF file.' });
@@ -166,9 +172,9 @@ export default function ConvertPage() {
   return (
     <Workspace
       title="Format Converter"
-      description="Quickly convert your images to different formats like JPEG, PNG, WebP, and more."
+      description="Quickly convert your images or PDFs to different formats like JPEG, PNG, WebP, and more."
     >
-      <ImageUpload file={file} onImageUpload={handleImageUpload} onRemoveImage={handleRemoveImage} />
+      <ImageUpload file={file} onImageUpload={handleImageUpload} onRemoveImage={handleRemoveImage} accept="image/*,application/pdf" description="PNG, JPG, GIF, WebP or PDF"/>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
         <div>

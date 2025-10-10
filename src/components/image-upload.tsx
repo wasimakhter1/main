@@ -13,7 +13,7 @@ interface ImageUploadProps {
   description?: string;
 }
 
-export default function ImageUpload({ onImageUpload, onRemoveImage, file, accept = "image/png,image/jpeg,image/gif,image/webp,application/pdf", description = "PNG, JPG, GIF, WebP or PDF" }: ImageUploadProps) {
+export default function ImageUpload({ onImageUpload, onRemoveImage, file, accept = "image/*", description = "PNG, JPG, GIF or WebP" }: ImageUploadProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
   const [isPdf, setIsPdf] = useState(false);

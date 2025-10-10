@@ -14,24 +14,24 @@ const ImageCompressionInputSchema = z.object({
   imageDataUri: z
     .string()
     .describe(
-      "The image to compress, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
+      "A data URI of the image to compress. Must include a MIME type and use Base64 encoding. e.g., 'data:<mimetype>;base64,<encoded_data>'."
     ),
   compressionLevel: z
     .number()
     .min(0)
     .max(100)
     .optional()
-    .describe('The desired compression level (0-100, 0 being highest compression, 100 being lowest). If omitted, AI will pick the best.'),
+    .describe('Desired compression level (0-100). 0 is max compression, 100 is lowest. AI will optimize if omitted.'),
 });
 export type ImageCompressionInput = z.infer<typeof ImageCompressionInputSchema>;
 
 const ImageCompressionOutputSchema = z.object({
   compressedImageDataUri: z
     .string()
-    .describe('The compressed image, as a data URI.'),
+    .describe('The compressed image as a JPEG data URI.'),
   optimizationDetails: z
     .string()
-    .describe('Details about the optimization process and settings used.'),
+    .describe('A summary of the optimization process and settings used.'),
 });
 export type ImageCompressionOutput = z.infer<typeof ImageCompressionOutputSchema>;
 
@@ -43,20 +43,21 @@ const imageCompressionPrompt = ai.definePrompt({
   name: 'imageCompressionPrompt',
   input: {schema: ImageCompressionInputSchema},
   output: {schema: ImageCompressionOutputSchema},
-  prompt: `You are an expert image compression specialist.
+  prompt: `You are an image compression expert.
 
-You will receive an image and an optional desired compression level (0-100, where 0 is the highest compression and 100 is the lowest).
+You will receive an image and an optional compression level (0-100, where 0 is highest compression, 100 is lowest).
 
-Your task is to compress the provided image.
+Your task is to compress the image.
 
-- If a compressionLevel is specified, use it as a guide to balance quality and file size.
-- If no compressionLevel is specified, you must determine the optimal level to significantly reduce file size while preserving as much visual quality as possible.
+- If a compressionLevel is specified, use it as a guide.
+- If no compressionLevel is specified, determine the optimal level to reduce file size while preserving visual quality.
 
-You must return the compressed image as a JPEG data URI. Also, provide a brief summary of the optimization process, including the final compression settings you used.
+Return the compressed image as a JPEG data URI and a brief summary of the optimization, including the final compression settings.
 
 Image: {{media url=imageDataUri}}
 Requested Compression Level (0-100): {{compressionLevel}}`,
 });
+
 
 const imageCompressionFlow = ai.defineFlow(
   {

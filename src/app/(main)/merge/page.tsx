@@ -28,7 +28,7 @@ export default function MergePage() {
     if (e.target.files) {
       const newFiles = Array.from(e.target.files).map(file => ({
         file,
-        preview: URL.createObjectURL(file)
+        preview: file.type.startsWith('image/') ? URL.createObjectURL(file) : ''
       }));
       setFiles(prev => [...prev, ...newFiles]);
     }
@@ -37,7 +37,7 @@ export default function MergePage() {
   const removeFile = (fileName: string) => {
     setFiles(prev => {
       const fileToRemove = prev.find(f => f.file.name === fileName);
-      if (fileToRemove) {
+      if (fileToRemove && fileToRemove.preview) {
         URL.revokeObjectURL(fileToRemove.preview);
       }
       return prev.filter(f => f.file.name !== fileName);
