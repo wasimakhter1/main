@@ -1,23 +1,16 @@
 'use client';
 
 import Link from 'next/link';
-import { Globe, Moon, Sun } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { useState, useEffect } from 'react';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const useTheme = () => {
   const [theme, setTheme] = useState('light');
 
   useEffect(() => {
-    const storedTheme = localStorage.getItem('theme') || 'light';
+    const storedTheme = typeof window !== 'undefined' ? localStorage.getItem('theme') || 'light' : 'light';
     setTheme(storedTheme);
   }, []);
 
@@ -36,32 +29,13 @@ const useTheme = () => {
   return { theme, toggleTheme };
 };
 
-const languages = [
-  "English", "Español", "Français", "Deutsch", "中文 (Mandarin)",
-  "हिन्दी", "العربية", "Português", "বাংলা", "Русский",
-  "日本語", "ਪੰਜਾਬੀ", "Javanese", "한국어", "Türkçe",
-  "Italiano", "Polski", "Українська", "Nederlands", "ไทย",
-  "Tiếng Việt", "Română"
-];
-
 export default function AppFooter() {
   const { theme, toggleTheme } = useTheme();
-  const [selectedLanguage, setSelectedLanguage] = useState('English');
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
-    const storedLanguage = localStorage.getItem('language') || 'English';
-    setSelectedLanguage(storedLanguage);
   }, []);
-
-  const handleLanguageChange = (lang: string) => {
-    setSelectedLanguage(lang);
-    if(typeof window !== 'undefined') {
-      localStorage.setItem('language', lang);
-    }
-  }
-
 
   return (
     <footer className="border-t bg-card">
@@ -79,39 +53,16 @@ export default function AppFooter() {
         </div>
         <div className="flex items-center gap-2">
           {isClient ? (
-            <>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline">
-                    <Globe className="h-[1.2rem] w-[1.2rem] mr-2" />
-                    {selectedLanguage}
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <ScrollArea className="h-72 w-48 rounded-md">
-                    {languages.map((lang) => (
-                        <DropdownMenuItem key={lang} onSelect={() => handleLanguageChange(lang)}>
-                            {lang}
-                        </DropdownMenuItem>
-                    ))}
-                  </ScrollArea>
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              <Button variant="outline" size="icon" onClick={toggleTheme}>
-                {theme === 'light' ? (
-                  <Moon className="h-[1.2rem] w-[1.2rem]" />
-                ) : (
-                  <Sun className="h-[1.2rem] w-[1.2rem]" />
-                )}
-                <span className="sr-only">Toggle theme</span>
-              </Button>
-            </>
-            ) : (
-              <>
-                <Skeleton className="h-10 w-[120px]" />
-                <Skeleton className="h-10 w-10" />
-              </>
+            <Button variant="outline" size="icon" onClick={toggleTheme}>
+              {theme === 'light' ? (
+                <Moon className="h-[1.2rem] w-[1.2rem]" />
+              ) : (
+                <Sun className="h-[1.2rem] w-[1.2rem]" />
+              )}
+              <span className="sr-only">Toggle theme</span>
+            </Button>
+          ) : (
+            <Skeleton className="h-10 w-10" />
           )}
         </div>
       </div>
