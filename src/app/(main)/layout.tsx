@@ -11,7 +11,12 @@ export default function MainLayout({ children }: { children: ReactNode }) {
       <SidebarInset>
         <div className="flex flex-col h-svh">
           <AppHeader />
-          <main className="flex-1 grid grid-cols-12 gap-8 p-4 md:p-6 lg:p-8 pt-12 overflow-y-auto bg-background">
+          <div className="p-4 md:px-6 lg:px-8 border-b">
+            <div className="bg-card h-24 rounded-lg flex items-center justify-center text-muted-foreground">
+              {/* Top Ad space */}
+            </div>
+          </div>
+          <main className="flex-1 grid grid-cols-12 gap-8 p-4 md:p-6 lg:p-8 pt-6 overflow-y-auto bg-background">
             <div className="col-span-12 lg:col-span-3 lg:block hidden bg-card rounded-lg h-full">
                 {/* Ad space */}
             </div>
