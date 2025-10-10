@@ -87,27 +87,47 @@ export default function MergePage() {
     setIsProcessing(true);
     
     try {
-      const images = await Promise.all(files.map(({ file }) => getImage(file)));
+      const originalImages = await Promise.all(files.map(({ file }) => getImage(file)));
+      const firstImage = originalImages[0];
+      const { width: targetWidth, height: targetHeight } = firstImage;
+
+      const images = await Promise.all(originalImages.map(img => {
+        if (img.width === targetWidth && img.height === targetHeight) {
+          return Promise.resolve(img);
+        }
+        return new Promise<HTMLImageElement>(resolve => {
+          const canvas = document.createElement('canvas');
+          canvas.width = targetWidth;
+          canvas.height = targetHeight;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) return resolve(img); // fallback to original if context fails
+          ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+          const resizedImg = new Image();
+          resizedImg.onload = () => resolve(resizedImg);
+          resizedImg.src = canvas.toDataURL();
+        })
+      }));
+
 
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       if (!ctx) throw new Error('Canvas context not available');
 
       if (mergeDirection === 'horizontal') {
-        canvas.width = images.reduce((acc, img) => acc + img.width, 0);
-        canvas.height = Math.max(...images.map(img => img.height));
+        canvas.width = targetWidth * images.length;
+        canvas.height = targetHeight;
         let currentX = 0;
         images.forEach(img => {
           ctx.drawImage(img, currentX, 0);
-          currentX += img.width;
+          currentX += targetWidth;
         });
       } else { // vertical
-        canvas.width = Math.max(...images.map(img => img.width));
-        canvas.height = images.reduce((acc, img) => acc + img.height, 0);
+        canvas.width = targetWidth;
+        canvas.height = targetHeight * images.length;
         let currentY = 0;
         images.forEach(img => {
           ctx.drawImage(img, 0, currentY);
-          currentY += img.height;
+          currentY += targetHeight;
         });
       }
 
