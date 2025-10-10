@@ -17,13 +17,13 @@ export default function MainLayout({ children }: { children: ReactNode }) {
             </div>
           </div>
           <main className="flex-1 grid grid-cols-12 gap-8 p-4 md:p-6 lg:p-8 pt-6 overflow-y-auto bg-background">
-            <div className="col-span-12 lg:col-span-3 lg:block hidden bg-card rounded-lg h-full">
+            <div className="col-span-12 lg:col-span-2 lg:block hidden bg-card rounded-lg h-full">
                 {/* Ad space */}
             </div>
-            <div className="col-span-12 lg:col-span-6 mx-auto w-full">
+            <div className="col-span-12 lg:col-span-8 mx-auto w-full">
               {children}
             </div>
-            <div className="col-span-12 lg:col-span-3 lg:block hidden bg-card rounded-lg h-full">
+            <div className="col-span-12 lg:col-span-2 lg:block hidden bg-card rounded-lg h-full">
               {/* Ad space */}
             </div>
           </main>
