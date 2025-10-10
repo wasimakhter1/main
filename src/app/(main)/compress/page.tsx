@@ -113,7 +113,7 @@ export default function CompressPage() {
 
     } catch (error) {
       console.error(error);
-      toast({ variant: 'destructive', title: 'AI Compression Error', description: 'Failed to compress the image with AI.' });
+      toast({ variant: 'destructive', title: 'AI Compression Error', description: 'Failed to compress the image with AI. Please try another image format.' });
     } finally {
         setIsCompressing(false);
     }
@@ -126,7 +126,7 @@ export default function CompressPage() {
       title="AI Image Compressor"
       description="Reduce image file size with our smart AI compressor. Adjust the quality to find the perfect balance."
     >
-      <ImageUpload file={file} onImageUpload={handleImageUpload} onRemoveImage={handleRemoveImage} />
+      <ImageUpload file={file} onImageUpload={handleImageUpload} onRemoveImage={handleRemoveImage} accept="image/png,image/jpeg,image/webp" description="PNG, JPG or WebP" />
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
         <div>
