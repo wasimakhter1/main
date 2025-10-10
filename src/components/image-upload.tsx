@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, type DragEvent, type ChangeEvent, useEffect } from 'react';
-import { UploadCloud, X } from 'lucide-react';
+import { UploadCloud, X, File as FileIcon } from 'lucide-react';
 import { Button } from './ui/button';
 import Image from 'next/image';
 
@@ -14,16 +14,24 @@ interface ImageUploadProps {
 export default function ImageUpload({ onImageUpload, onRemoveImage, file }: ImageUploadProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
+  const [isPdf, setIsPdf] = useState(false);
 
   useEffect(() => {
     if (!file) {
       setPreview(null);
+      setIsPdf(false);
       return;
     }
-    const objectUrl = URL.createObjectURL(file);
-    setPreview(objectUrl);
 
-    return () => URL.revokeObjectURL(objectUrl);
+    if (file.type === 'application/pdf') {
+      setIsPdf(true);
+      setPreview(null);
+    } else {
+      setIsPdf(false);
+      const objectUrl = URL.createObjectURL(file);
+      setPreview(objectUrl);
+      return () => URL.revokeObjectURL(objectUrl);
+    }
   }, [file]);
 
   const handleDragEnter = (e: DragEvent<HTMLLabelElement>) => {
@@ -57,11 +65,28 @@ export default function ImageUpload({ onImageUpload, onRemoveImage, file }: Imag
       onImageUpload(e.target.files[0]);
     }
   };
+  
+  const renderPreview = () => {
+    if (isPdf) {
+      return (
+        <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
+          <FileIcon className="h-16 w-16" />
+          <p className="mt-2 text-sm font-medium">{file?.name}</p>
+        </div>
+      )
+    }
+    
+    if (preview) {
+      return <Image src={preview} alt="Image preview" fill className="object-contain p-4" />
+    }
+    
+    return null;
+  }
 
-  if (preview) {
+  if (file) {
     return (
       <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-dashed">
-        <Image src={preview} alt="Image preview" fill className="object-contain p-4" />
+        {renderPreview()}
         <Button
           variant="destructive"
           size="icon"
@@ -91,9 +116,9 @@ export default function ImageUpload({ onImageUpload, onRemoveImage, file }: Imag
         <p className="mb-2 text-sm text-muted-foreground">
           <span className="font-semibold text-primary">Click to upload</span> or drag and drop
         </p>
-        <p className="text-xs text-muted-foreground">PNG, JPG, GIF, or WebP</p>
+        <p className="text-xs text-muted-foreground">PNG, JPG, GIF, WebP or PDF</p>
       </div>
-      <input id="dropzone-file" type="file" className="hidden" onChange={handleFileChange} accept="image/png,image/jpeg,image/gif,image/webp" />
+      <input id="dropzone-file" type="file" className="hidden" onChange={handleFileChange} accept="image/png,image/jpeg,image/gif,image/webp,application/pdf" />
     </label>
   );
 }
