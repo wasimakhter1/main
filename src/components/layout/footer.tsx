@@ -79,35 +79,40 @@ export default function AppFooter() {
         </div>
         <div className="flex items-center gap-2">
           {isClient ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline">
-                  <Globe className="h-[1.2rem] w-[1.2rem] mr-2" />
-                  {selectedLanguage}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <ScrollArea className="h-72 w-48 rounded-md">
-                  {languages.map((lang) => (
-                      <DropdownMenuItem key={lang} onSelect={() => handleLanguageChange(lang)}>
-                          {lang}
-                      </DropdownMenuItem>
-                  ))}
-                </ScrollArea>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            ) : (
-              <Skeleton className="h-10 w-[120px]" />
-          )}
+            <>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline">
+                    <Globe className="h-[1.2rem] w-[1.2rem] mr-2" />
+                    {selectedLanguage}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <ScrollArea className="h-72 w-48 rounded-md">
+                    {languages.map((lang) => (
+                        <DropdownMenuItem key={lang} onSelect={() => handleLanguageChange(lang)}>
+                            {lang}
+                        </DropdownMenuItem>
+                    ))}
+                  </ScrollArea>
+                </DropdownMenuContent>
+              </DropdownMenu>
 
-          <Button variant="outline" size="icon" onClick={toggleTheme}>
-            {theme === 'light' ? (
-              <Moon className="h-[1.2rem] w-[1.2rem]" />
+              <Button variant="outline" size="icon" onClick={toggleTheme}>
+                {theme === 'light' ? (
+                  <Moon className="h-[1.2rem] w-[1.2rem]" />
+                ) : (
+                  <Sun className="h-[1.2rem] w-[1.2rem]" />
+                )}
+                <span className="sr-only">Toggle theme</span>
+              </Button>
+            </>
             ) : (
-              <Sun className="h-[1.2rem] w-[1.2rem]" />
-            )}
-            <span className="sr-only">Toggle theme</span>
-          </Button>
+              <>
+                <Skeleton className="h-10 w-[120px]" />
+                <Skeleton className="h-10 w-10" />
+              </>
+          )}
         </div>
       </div>
     </footer>
