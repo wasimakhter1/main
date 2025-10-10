@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useState, useEffect } from 'react';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const useTheme = () => {
   const [theme, setTheme] = useState('light');
@@ -31,6 +32,14 @@ const useTheme = () => {
 
   return { theme, toggleTheme };
 };
+
+const languages = [
+  "English", "Español", "Français", "Deutsch", "中文 (Mandarin)",
+  "हिन्दी", "العربية", "Português", "বাংলা", "Русский",
+  "日本語", "ਪੰਜਾਬੀ", "Javanese", "한국어", "Türkçe",
+  "Italiano", "Polski", "Українська", "Nederlands", "ไทย",
+  "Tiếng Việt", "Română"
+];
 
 export default function AppFooter() {
   const { theme, toggleTheme } = useTheme();
@@ -58,9 +67,13 @@ export default function AppFooter() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>English</DropdownMenuItem>
-              <DropdownMenuItem disabled>Español</DropdownMenuItem>
-              <DropdownMenuItem disabled>Français</DropdownMenuItem>
+              <ScrollArea className="h-72 w-48 rounded-md">
+                {languages.map((lang, index) => (
+                    <DropdownMenuItem key={index} disabled={lang !== "English"}>
+                        {lang}
+                    </DropdownMenuItem>
+                ))}
+              </ScrollArea>
             </DropdownMenuContent>
           </DropdownMenu>
 
