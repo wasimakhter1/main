@@ -9,36 +9,6 @@ import { useToast } from '@/hooks/use-toast';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { compressImage as aiCompressImage } from '@/ai/flows/compress-image-flow';
-
-function fileToDataURI(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-
-function dataURIToFile(dataURI: string, filename: string): File {
-    const arr = dataURI.split(',');
-    if (arr.length < 2) {
-        throw new Error('Invalid Data URI');
-    }
-    const mimeMatch = arr[0].match(/:(.*?);/);
-    if (!mimeMatch || mimeMatch.length < 2) {
-        throw new Error('Could not determine mime type');
-    }
-    const mime = mimeMatch[1];
-    const bstr = atob(arr[1]);
-    let n = bstr.length;
-    const u8arr = new Uint8Array(n);
-    while (n--) {
-        u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new File([u8arr], filename, { type: mime });
-}
-
 
 export default function CompressPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -89,33 +59,55 @@ export default function CompressPage() {
     setCompressedSize(null);
 
     try {
-      const imageDataUri = await fileToDataURI(file);
-      const result = await aiCompressImage({
-        imageDataUri,
-        compressionLevel: 100 - quality,
-      });
+        const img = new Image();
+        img.src = URL.createObjectURL(file);
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+                toast({ variant: 'destructive', title: 'Error', description: 'Could not get image context.' });
+                setIsCompressing(false);
+                return;
+            }
+            ctx.drawImage(img, 0, 0);
 
-      const newFileName = `${file.name.replace(/\.[^/.]+$/, "")}_compressed.jpg`;
-      const compressedFile = dataURIToFile(result.compressedImageDataUri, newFileName);
-      setCompressedSize(compressedFile.size);
+            const newFileName = `${file.name.replace(/\.[^/.]+$/, "")}_compressed.jpg`;
+            
+            canvas.toBlob((blob) => {
+                if (!blob) {
+                    toast({ variant: 'destructive', title: 'Error', description: 'Compression failed.' });
+                    setIsCompressing(false);
+                    return;
+                }
 
-      const link = document.createElement('a');
-      link.href = result.compressedImageDataUri;
-      link.download = newFileName;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+                setCompressedSize(blob.size);
 
-      toast({
-        title: 'Compression & Download Complete',
-        description: 'AI-powered compression finished and download has started.',
-      });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = newFileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(link.href);
+
+                toast({
+                    title: 'Compression Complete',
+                    description: 'Your compressed image has been downloaded.',
+                });
+                setIsCompressing(false);
+            }, 'image/jpeg', quality / 100);
+        }
+        img.onerror = () => {
+            toast({ variant: 'destructive', title: 'Error', description: 'Failed to load image.' });
+            setIsCompressing(false);
+        }
 
     } catch (error) {
       console.error(error);
-      toast({ variant: 'destructive', title: 'AI Compression Error', description: 'Failed to compress the image with AI. Please try another image format.' });
-    } finally {
-        setIsCompressing(false);
+      toast({ variant: 'destructive', title: 'Compression Error', description: 'An unexpected error occurred.' });
+      setIsCompressing(false);
     }
   };
   
@@ -123,8 +115,8 @@ export default function CompressPage() {
 
   return (
     <Workspace
-      title="AI Image Compressor"
-      description="Reduce image file size with our smart AI compressor. Adjust the quality to find the perfect balance."
+      title="Image Compressor"
+      description="Reduce image file size. Adjust the quality to find the perfect balance."
     >
       <ImageUpload file={file} onImageUpload={handleImageUpload} onRemoveImage={handleRemoveImage} accept="image/png,image/jpeg,image/webp" description="PNG, JPG or WebP" />
       
