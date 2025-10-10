@@ -16,6 +16,7 @@ export default function CompressPage() {
   const [originalSize, setOriginalSize] = useState<number | null>(null);
   const [compressedSize, setCompressedSize] = useState<number | null>(null);
   const [isCompressing, setIsCompressing] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     if (file) {
