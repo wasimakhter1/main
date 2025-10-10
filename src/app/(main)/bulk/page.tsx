@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { FORMATS } from '@/lib/constants';
 import JSZip from 'jszip';
+import jsPDF from 'jspdf';
 
 type FileWithPreview = {
   file: File;
@@ -53,10 +54,29 @@ export default function BulkPage() {
             
             ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
             
+            const newName = `${file.name.replace(/\.[^/.]+$/, "")}.${targetFormat.toLowerCase()}`;
+
+            if (targetFormat === 'PDF') {
+              try {
+                const orientation = targetWidth > targetHeight ? 'l' : 'p';
+                const pdf = new jsPDF({
+                  orientation,
+                  unit: 'px',
+                  format: [targetWidth, targetHeight]
+                });
+                const imgData = canvas.toDataURL(file.type.startsWith('image/') ? file.type : 'image/png');
+                pdf.addImage(imgData, file.type.replace('image/','').toUpperCase(), 0, 0, targetWidth, targetHeight);
+                const blob = pdf.output('blob');
+                resolve({ blob, name: newName });
+              } catch (error) {
+                reject(error);
+              }
+              return;
+            }
+
             const mimeType = `image/${targetFormat.toLowerCase()}`;
             canvas.toBlob(blob => {
                 if (!blob) return reject(new Error('Failed to create blob'));
-                const newName = `${file.name.replace(/\.[^/.]+$/, '')}.${targetFormat.toLowerCase()}`;
                 resolve({ blob, name: newName });
             }, mimeType);
         };
