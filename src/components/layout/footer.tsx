@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useState, useEffect } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const useTheme = () => {
   const [theme, setTheme] = useState('light');
@@ -21,9 +22,11 @@ const useTheme = () => {
   }, []);
 
   useEffect(() => {
-    document.documentElement.classList.remove('light', 'dark');
-    document.documentElement.classList.add(theme);
-    localStorage.setItem('theme', theme);
+    if (typeof window !== 'undefined') {
+      document.documentElement.classList.remove('light', 'dark');
+      document.documentElement.classList.add(theme);
+      localStorage.setItem('theme', theme);
+    }
   }, [theme]);
 
   const toggleTheme = () => {
@@ -44,6 +47,12 @@ const languages = [
 export default function AppFooter() {
   const { theme, toggleTheme } = useTheme();
   const [selectedLanguage, setSelectedLanguage] = useState('English');
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
 
   return (
     <footer className="border-t bg-card">
@@ -60,23 +69,27 @@ export default function AppFooter() {
           </Link>
         </div>
         <div className="flex items-center gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">
-                <Globe className="h-[1.2rem] w-[1.2rem] mr-2" />
-                {selectedLanguage}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <ScrollArea className="h-72 w-48 rounded-md">
-                {languages.map((lang) => (
-                    <DropdownMenuItem key={lang} onSelect={() => setSelectedLanguage(lang)}>
-                        {lang}
-                    </DropdownMenuItem>
-                ))}
-              </ScrollArea>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {isClient ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">
+                  <Globe className="h-[1.2rem] w-[1.2rem] mr-2" />
+                  {selectedLanguage}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <ScrollArea className="h-72 w-48 rounded-md">
+                  {languages.map((lang) => (
+                      <DropdownMenuItem key={lang} onSelect={() => setSelectedLanguage(lang)}>
+                          {lang}
+                      </DropdownMenuItem>
+                  ))}
+                </ScrollArea>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            ) : (
+              <Skeleton className="h-10 w-[120px]" />
+          )}
 
           <Button variant="outline" size="icon" onClick={toggleTheme}>
             {theme === 'light' ? (
