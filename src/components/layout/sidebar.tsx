@@ -45,16 +45,6 @@ export default function AppSidebar() {
           ))}
         </SidebarMenu>
       </SidebarContent>
-      <SidebarFooter>
-        <Separator className="my-2" />
-        <div className="p-2">
-            <Button asChild className="w-full" variant="outline">
-                <a href="https://github.com/FirebaseExtended/ai-apps" target="_blank" rel="noopener noreferrer">
-                    View Source Code
-                </a>
-            </Button>
-        </div>
-      </SidebarFooter>
     </Sidebar>
   );
 }

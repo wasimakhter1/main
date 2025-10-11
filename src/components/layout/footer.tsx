@@ -8,46 +8,43 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 const useTheme = () => {
   const [theme, setTheme] = useState('light');
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    const storedTheme = typeof window !== 'undefined' ? localStorage.getItem('theme') || 'light' : 'light';
+    setIsClient(true);
+    const storedTheme = localStorage.getItem('theme') || 'light';
     setTheme(storedTheme);
   }, []);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (isClient) {
       document.documentElement.classList.remove('light', 'dark');
       document.documentElement.classList.add(theme);
       localStorage.setItem('theme', theme);
     }
-  }, [theme]);
+  }, [theme, isClient]);
 
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
   };
 
-  return { theme, toggleTheme };
+  return { theme, toggleTheme, isClient };
 };
 
 export default function AppFooter() {
-  const { theme, toggleTheme } = useTheme();
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  const { theme, toggleTheme, isClient } = useTheme();
 
   return (
     <footer className="border-t bg-card">
       <div className="container mx-auto px-4 py-4 md:px-6 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-4 text-sm text-muted-foreground">
-          <Link href="#" className="hover:text-primary">
-            About Us
+          <Link href="/about" className="hover:text-primary" title="About our free image tools">
+            About us
           </Link>
-          <Link href="#" className="hover:text-primary">
+          <Link href="/contact" className="hover:text-primary" title="Contact us for support">
             Contact Us
           </Link>
-          <Link href="#" className="hover:text-primary">
+          <Link href="/privacy" className="hover:text-primary" title="Privacy policy for our image tools">
             Privacy Policy
           </Link>
         </div>

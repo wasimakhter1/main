@@ -1,4 +1,4 @@
-import { Scale, Replace, Minimize, Layers, Sparkles, Home, Combine, Crop, type LucideIcon } from 'lucide-react';
+import { Scale, Replace, Minimize, Layers, Sparkles, Home, Combine, Crop, Mail, type LucideIcon } from 'lucide-react';
 
 export type Preset = {
   name: string;
@@ -38,4 +38,5 @@ export const mainNavLinks: NavLink[] = [
   { href: '/compress', label: 'Compress', title: 'AI Image Compressor', icon: Minimize },
   { href: '/merge', label: 'Merge', title: 'Image Merger', icon: Combine },
   { href: '/bulk', label: 'Bulk', title: 'Bulk Operations', icon: Layers },
+  { href: '/contact', label: 'Contact', title: 'Contact Us', icon: Mail },
 ];
