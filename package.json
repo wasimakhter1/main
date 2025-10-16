@@ -44,11 +44,7 @@
     "jspdf": "^2.5.1",
     "jszip": "^3.10.1",
     "lucide-react": "^0.475.0",
-<<<<<<< HEAD
     "next": "^15.3.3",
-=======
-    "next": "15.3.3",
->>>>>>> a15005a017c1bba2567a80bc6156e2ac5b8a298a
     "patch-package": "^8.0.0",
     "pdfjs-dist": "^4.5.136",
     "react": "^18.3.1",
@@ -62,23 +58,13 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
-<<<<<<< HEAD
     "@types/node": "^20.19.21",
     "@types/pdfjs-dist": "^2.10.378",
     "@types/react": "^18.3.26",
-=======
-    "@types/node": "^20",
-    "@types/pdfjs-dist": "^2.10.378",
-    "@types/react": "^18",
->>>>>>> a15005a017c1bba2567a80bc6156e2ac5b8a298a
     "@types/react-dom": "^18",
     "genkit-cli": "^1.20.0",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-<<<<<<< HEAD
     "typescript": "^5.9.3"
-=======
-    "typescript": "^5"
->>>>>>> a15005a017c1bba2567a80bc6156e2ac5b8a298a
   }
 }
