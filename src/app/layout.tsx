@@ -1,21 +1,13 @@
-<<<<<<< HEAD
 // app/layout.tsx
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import Script from 'next/script';
-=======
-import type {Metadata} from 'next';
-import './globals.css';
-import { Toaster } from "@/components/ui/toaster"
-import { SidebarProvider } from "@/components/ui/sidebar"
->>>>>>> a15005a017c1bba2567a80bc6156e2ac5b8a298a
 
 export const metadata: Metadata = {
   title: 'ImageResizeKit',
   description: 'Resize, convert, compress, and enhance your images with AI.',
-<<<<<<< HEAD
   icons: { icon: '/favicon.ico' },
   verification: {
     google: 'mgJ8wFxmJl5MqI4GN24eyLeFx_-BGmN8q6ByJAwtnkw', // ✅ add this line
@@ -52,23 +44,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
 
         <SidebarProvider>{children}</SidebarProvider>
-=======
-};
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-      </head>
-      <body className="font-body antialiased">
-        <SidebarProvider>
-          {children}
-        </SidebarProvider>
->>>>>>> a15005a017c1bba2567a80bc6156e2ac5b8a298a
         <Toaster />
       </body>
     </html>
