@@ -3,6 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import Script from 'next/script';
+import Head from 'next/head'; // ✅ Import Head
 
 export const metadata: Metadata = {
   title: 'ImageResizeKit – Free Online Image Resizer, Compressor & Converter',
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
     siteName: 'ImageResizeKit',
     images: [
       {
-        url: 'https://imageresizekit.com/og-image.png', // ⚠️ Replace with your actual OG image URL
+        url: 'https://imageresizekit.com/og-image.png',
         width: 1200,
         height: 630,
         alt: 'ImageResizeKit – Free Online Image Resizer',
@@ -34,8 +35,8 @@ export const metadata: Metadata = {
     title: 'ImageResizeKit – Free Online Image Resizer, Compressor & Converter',
     description:
       'Resize, compress, and convert images online for free with ImageResizeKit. Optimize your photos instantly using smart AI tools — fast, easy, and secure.',
-    images: ['https://imageresizekit.com/og-image.png'], // ⚠️ Replace with your OG image
-    creator: '@ImageResizeKit', // optional if you have Twitter
+    images: ['https://imageresizekit.com/og-image.png'],
+    creator: '@ImageResizeKit',
   },
   keywords: [
     'image resizer',
@@ -52,10 +53,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
+      <Head>
+        {/* Canonical Tag */}
+        <link rel="canonical" href="https://imageresizekit.com" />
         {/* Google AdSense Meta Tag */}
         <meta name="google-adsense-account" content="ca-pub-6634397146745986" />
-      </head>
+      </Head>
       <body className="font-body antialiased bg-background text-foreground">
         {/* Google Analytics */}
         <Script
