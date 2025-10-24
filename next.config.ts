@@ -1,7 +1,6 @@
-import type {NextConfig} from 'next';
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -29,6 +28,24 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
+  },
+  async redirects() {
+    return [
+      // Force www → non-www
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.imageresizekit.com' }],
+        destination: 'https://imageresizekit.com/:path*',
+        permanent: true, // sets 308 (permanent redirect)
+      },
+      // Force HTTP → HTTPS
+      {
+        source: '/:path*',
+        has: [{ type: 'protocol', value: 'http' }],
+        destination: 'https://imageresizekit.com/:path*',
+        permanent: true,
+      },
+    ]
   },
 };
 
